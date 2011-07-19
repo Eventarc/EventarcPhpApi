@@ -1,18 +1,39 @@
 <?php
+
 /**
- * 
+ * Eventarc API library.
+ * You should look at the docs: http://api.eventarc.com/docs/
  *
- * @package    EventarcApiPhpLibrary
- * @category   Library
- * @author     Eventarc
- * @copyright  (c) 2009-2011 Eventarc
- * @license    http://api.eventarc.com/doc/license.txt
+ * Heres a quick demo:
+ *
+ * <code>
+ *		<?php 
+ *		// Include the library
+ *		require_once __DIR__.'/../Eventarc.php';
+ *
+ *		// Get an instance of the API
+ *		$eventarc = new Eventarc('yourapikeygoesinhere', 'yourusername');
+ *		
+ *		// Get a event list
+ *		try {
+ *			$events = $eventarc->event_list();
+ *		} catch (Eventarc_Exception $e) {
+ *			echo $e->getMessage(); // Troubles...
+ *		}
+ *
+ * </code>
+ *    
+ * @package	Eventarc
+ * @category	Library
+ * @author	Eventarc Team
+ * @copyright	(c) 2008-2011 Eventarc Team
+ * @license	http://api.eventarc.com/docs/license.txt
+ * @link	http://api.eventarc.com/docs/
  */
 class Eventarc
 {
 	const VERSION = 2.0;
 
-	// TODO A little documentation....
 	protected $params = array();
 	private $server = 'https://api.eventarc.com/api/v2/';
 	protected $method;
@@ -28,6 +49,15 @@ class Eventarc
 
 	/**
 	 * Constructor
+	 * 
+	 * Its easier to pass in your apikey and u_id/u_name with the constructor.
+	 * Note that you can choose to pass either your username (u_name) or u_id to
+	 * the api.
+	 * 
+	 * @param string $u_apikey 
+	 * @param mixed $u_id Either your u_id or u_name
+	 * @access public
+	 * @return void
 	 */
 	public function __construct($u_apikey=FALSE, $u_id=FALSE)
 	{
@@ -42,6 +72,19 @@ class Eventarc
 		$this->u_apikey = $u_apikey;
 	}
 
+	/**
+	 * Get a list of your eventarc groups.
+	 * Note that these are referred to and displayed as 'folders' in the
+	 * myeventarc interface. You know, those folder-y things on the left hand
+	 * side?
+	 * 
+	 * Groups are just a convenient way of grouping events.
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
+	 * @return array The result array
+	 */
 	public function group_list($u_id=FALSE)
 	{
 		if ( ! $u_id)
@@ -54,6 +97,18 @@ class Eventarc
 		);
 	}
 
+	/**
+	 * Get your list of events.
+	 * This returns all of your events. If you want you can provide a status to
+	 * filter the events returned. Valid statuses are:
+	 * active, pending, draft
+	 * 
+	 * @param string $e_status You can try active, pending, draft or leave it
+	 * out and get all of them.
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventlist.html
+	 * @return array The result array
+	 */
 	public function event_list($e_status=FALSE)
 	{
 		if ($e_status)
@@ -63,6 +118,14 @@ class Eventarc
 		return $this->call('eventarc.event.list');
 	}
 
+	/**
+	 * Get a particular group  
+	 * 
+	 * @param int $g_id The id of the group to get
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgroupget.html
+	 * @return array The result array
+	 */
 	public function group_get($g_id)
 	{
 		return $this->call('eventarc.group.get', array(
@@ -71,6 +134,83 @@ class Eventarc
 		);
 	}
 	
+	/**
+	 * Gets the details of an attendee  
+	 * 
+	 * @param int $at_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcattendeeget.html
+	 * @return array The result array
+	 */
+	public function attendee_get($at_id)
+	{
+		return $this->call('eventarc.attendee.get', array(
+			'at_id' => $at_id
+			)
+		);
+	}
+	
+	/**
+	 * Login to the api and get your apikey. With a bit of luck you should only
+	 * need to do this once to grab your apikey.
+	 * 
+	 * @param string $u_name 
+	 * @param string $u_password 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcuserlogin.html
+	 * @return array The result array
+	 */
+	public function user_login($u_name, $u_password)
+	{
+		return $this->call('eventarc.user.login', array(
+			'u_name' => $u_name,
+			'u_password' => $u_password
+			)
+		);
+	}
+
+	/**
+	 * Resend a attendees confirmatin email. If the attendee is not valid or
+	 * active then this will fail.
+	 * 
+	 * @param int $at_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcattendeeresendemail.html
+	 * @return array The result array
+	 */
+	public function attendee_resendemail($at_id)
+	{
+		return $this->call('eventarc.attendee.resendemail', array(
+			'at_id' => $at_id
+			)
+		);
+	}
+
+
+	/**
+	 * Get a list of attendees for a particular event 
+	 * 
+	 * @param int $e_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcattendeelist.html
+	 * @return array The result array
+	 */
+	public function attendee_list($e_id)
+	{
+		return $this->call('eventarc.attendee.list', array(
+			'e_id' => $e_id
+			)
+		);
+	}
+
+	/**
+	 * Create a group and love it 
+	 * 
+	 * @param array $params This contains your group details
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgroupcreate.html
+	 * @return array The result array
+	 */
 	public function group_create(array $params)
 	{
 		// If g_parent is not set, set default to 0 (the first group)
@@ -81,6 +221,14 @@ class Eventarc
 		return $this->call('eventarc.group.create', $params);
 	}
 
+	/**
+	 * Get a users details. Get your own.  
+	 * 
+	 * @param int $u_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcuserget.html
+	 * @return array The result array
+	 */
 	public function user_get($u_id=FALSE)
 	{
 		if ( ! $u_id)
@@ -93,52 +241,126 @@ class Eventarc
 		);
 	}
 
+	/**
+	 * Add event data  (see the docs for how to use this..)
+	 * 
+	 * @param array $event_data Thats an array of event data
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return Eventarc Returns this class so you can chain, chain, chain.
+	 */
 	public function add_event(array $event_data)
 	{
 		$this->format_params($event_data);
 		return $this;
 	}
-
+	
+	/**
+	 * Add address data  (see the docs for how to use this..)
+	 * 
+	 * @param array $address_data Thats an array of address data
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return Eventarc Returns this class so you can chain, chain, chain.
+	 */
 	public function add_address(array $address_data)
 	{
 		$this->format_params($address_data);
 		return $this;
 	}
 
+	/**
+	 * Add widget data  (see the docs for how to use this..)
+	 * 
+	 * @param array $widget_data Thats an array of widget data
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return Eventarc Returns this class so you can chain, chain, chain.
+	 */
 	public function add_widget(array $widget_data)
 	{
 		$this->add_array_item('wd_data', $widget_data);
 		return $this;
 	}
 
+	/**
+	 * Add ticket data  (see the docs for how to use this..)
+	 * 
+	 * @param array $ticket_data Thats an array of ticket data
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return Eventarc Returns this class so you can chain, chain, chain.
+	 */
 	public function add_ticket(array $ticket_data)
 	{
 		$this->add_array_item('t_data', $ticket_data);
 		return $this;
 	}
 
+
+	/**
+	 * Add theme data  (see the docs for how to use this..)
+	 * 
+	 * @param array $theme_data Thats an array of theme data
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return Eventarc Returns this class so you can chain, chain, chain.
+	 */
 	public function add_theme(array $theme_data)
 	{
 		$this->format_params($theme_data);
 		return $this;
 	}
 
+
+	/**
+	 * Create the event that you have built. See docs for this one. 
+	 * 
+	 * @param mixed $params 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return array The result array
+	 */
 	public function event_create($params=FALSE)
 	{
 		return $this->call('eventarc.event.create', $params);
 	}
 
+	/**
+	 * Copies an events STUFF to a new event
+	 * 
+	 * @param int $e_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcopy.html
+	 * @return array The result array
+	 */
 	public function event_copy($e_id)
 	{
 		return $this->call('eventarc.event.copy', array('e_id' => $e_id));
 	}
 
+	/**
+	 * Add a ticket limit (see the docs for this one)  
+	 * 
+	 * @param int $to_total 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return Eventarc Returns this class so you can chain, chain, chain.
+	 */
 	public function add_ticket_limit($to_total)
 	{
 		$this->format_params(array('to_total' => $to_total));
 		return $this;
 	}
 	
+	/**
+	 * Add a ticket limit (see the docs for this one)  
+	 * 
+	 * @param int $to_total 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return Eventarc Returns this class so you can chain, chain, chain.
+	 */
 	public function add_ticket_show_fees($show_fees=FALSE)
 	{
 		$this->format_params(array('to_showfees' => ($show_fees)?1:0));
@@ -149,10 +371,10 @@ class Eventarc
 	/**
 	 * Call a eventarc API method
 	 * 
-	 * @param mixed $method 
-	 * @param mixed $data 
+	 * @param string $method The method to call. I'd make sure it was valid.
+	 * @param mixed $data The data to send to the method. 
 	 * @access public
-	 * @return void
+	 * @return array The result array
 	 */
 	public function call($method_in, $data = FALSE)
 	{
@@ -178,6 +400,14 @@ class Eventarc
 		return $this->send_payload();
 	}
 
+	/**
+	 * Add array item to the internal params.  
+	 * 
+	 * @param string $key 
+	 * @param array $item 
+	 * @access private
+	 * @return void
+	 */
 	private function add_array_item($key, array $item)
 	{
 		if ( ! array_key_exists($key, $this->params))
@@ -205,7 +435,7 @@ class Eventarc
 	 *
 	 * Once the data has been converted it is added to $this->params
 	 *
-	 * @param array $data 
+	 * @param array $data The data to format
 	 * @access private
 	 * @return void
 	 */
@@ -301,6 +531,12 @@ class Eventarc
 	}
 
 
+	/**
+	 * Send the payload!  
+	 * 
+	 * @access private
+	 * @return array The reponse!
+	 */
 	private function send_payload()
 	{
 		// Prepare the payload
@@ -367,6 +603,13 @@ class Eventarc
 		return $this->process_response($response);
 	}
 
+	/**
+	 * This processes the response from the API 
+	 * 
+	 * @param string $response This should be JSON
+	 * @access private
+	 * @return array The result
+	 */
 	private function process_response($response)
 	{
 		// The response should be valid JSON
@@ -388,8 +631,9 @@ class Eventarc
 					'Invalid control character in JSON', 400);
 				break;
 			case JSON_ERROR_SYNTAX:
-			var_dump($this->history);
-			die($response);
+				// HOW did you DO this?!
+				var_dump($this->history);
+				die($response);
 				throw new Eventarcapi_Exception(
 					'Invalid JSON syntax', 400);
 				break;
@@ -436,4 +680,11 @@ class Eventarc
 	}
 }
 
+/**
+ * Eventarcapi_Exception  
+ * 
+ * @uses Exception
+ * @package Eventarcapi
+ * @copyright 2009-2011 Eventarc
+ */
 class Eventarcapi_Exception extends Exception {}

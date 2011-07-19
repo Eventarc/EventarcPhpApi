@@ -17,7 +17,7 @@
  */
 
 // !! NOTE
-// You need to replace these with your own values or the api will be very upset
+// You need to replace these with your own values or this api will be very upset
 $u_apikey = '8de323378f4427ec9b38'; // 'd24a754b11e269159873';
 $u_id = 3;
 $u_name = 'testuser';
@@ -45,6 +45,17 @@ catch (Eventarcapi_Exception $e)
 	// var_dump($e);
 }	
 
+try {
+	$result = $eventarc->user_login('testuser','password');
+
+	// The result will contain the user data
+	// var_dump($result);
+}
+catch (Eventarcapi_Exception $e)
+{
+	// Check $eventarc->error to see why this failed
+	// var_dump($e);
+}	
 
 try {
 	// The result will contain the user data
@@ -71,6 +82,54 @@ try {
 		'eventarc.user.get',
 		$params);
 	$result = $eventarc->user_get();
+
+	// The result will contain the user data
+	// var_dump($result);
+}
+catch (Eventarcapi_Exception $e)
+{
+	// Check $eventarc->error to see why this failed
+	// var_dump($e);
+}	
+
+/**
+ * EXAMPLE eventarc.attendee.list
+ * 
+ * Get all the attendees for an event
+ *
+ */
+
+// Because we set the u_id and u_apikey in the constructor, we don't need to
+//  worry about adding them in here as they are auto added.
+$params = array();
+
+try {
+	$result = $eventarc->attendee_list(4);
+
+	// The result will contain the user data
+	// var_dump($result);
+}
+catch (Eventarcapi_Exception $e)
+{
+	// Check $eventarc->error to see why this failed
+	// var_dump($e);
+}	
+
+
+try {
+	$result = $eventarc->attendee_get(10);
+
+	// The result will contain the user data
+	// var_dump($result);{"jsonrpc":"2.0","id":1310969055,"result":{"email_sent":true}}
+}
+catch (Eventarcapi_Exception $e)
+{
+	// Check $eventarc->error to see why this failed
+	// var_dump($e);
+}	
+
+try {
+	$result = $eventarc->attendee_resendemail(10);
 
 	// The result will contain the user data
 	// var_dump($result);
