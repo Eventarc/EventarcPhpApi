@@ -23,16 +23,16 @@
  *
  * </code>
  *    
- * @package	Eventarc
+ * @package		Eventarc
  * @category	Library
- * @author	Eventarc Team
+ * @author		Eventarc Team
  * @copyright	(c) 2008-2011 Eventarc Team
- * @license	http://api.eventarc.com/docs/license.txt
- * @link	http://api.eventarc.com/docs/
+ * @license		http://api.eventarc.com/docs/license.txt
+ * @link		http://api.eventarc.com/docs/
  */
 class Eventarc
 {
-	const VERSION = 2.0;
+	const VERSION = 2.1;
 
 	protected $params = array();
 	private $server = 'https://api.eventarc.com/api/v2/';
@@ -119,6 +119,20 @@ class Eventarc
 	}
 
 	/**
+	 * Get an events list of tickets
+	 * 
+	 * @param int $e_id The event whose tickets you want
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventlist.html
+	 * @return array The result array
+	 */
+	public function event_get_tickets($e_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		return $this->call('eventarc.event.gettickets');
+	}
+
+	/**
 	 * Get a particular group  
 	 * 
 	 * @param int $g_id The id of the group to get
@@ -149,7 +163,24 @@ class Eventarc
 			)
 		);
 	}
-	
+
+	/**
+	 * Check a attendee in  
+	 * 
+	 * @param string $et_rego The attendees registration code
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcattendeecheckin.html
+	 * @return array The result array
+	 */
+	public function attendee_checkin($e_id, $et_rego)
+	{
+		return $this->call('eventarc.checkin.create', array(
+			'e_id' => $e_id,
+			'et_rego' => $et_rego
+			)
+		);
+	}
+
 	/**
 	 * Login to the api and get your apikey. With a bit of luck you should only
 	 * need to do this once to grab your apikey.

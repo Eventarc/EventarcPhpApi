@@ -46,6 +46,17 @@ catch (Eventarcapi_Exception $e)
 }	
 
 try {
+	$result = $eventarc->attendee_checkin(4,'XA10SPCC-1');
+	// The result will contain the user data
+	// var_dump($result);
+}
+catch (Eventarcapi_Exception $e)
+{
+	// Check $eventarc->error to see why this failed
+	// var_dump($e);
+}	
+
+try {
 	$result = $eventarc->user_login('testuser','password');
 
 	// The result will contain the user data
@@ -82,6 +93,18 @@ try {
 		'eventarc.user.get',
 		$params);
 	$result = $eventarc->user_get();
+
+	// The result will contain the user data
+	// var_dump($result);
+}
+catch (Eventarcapi_Exception $e)
+{
+	// Check $eventarc->error to see why this failed
+	// var_dump($e);
+}	
+
+try {
+	$result = $eventarc->event_get_tickets(1826);
 
 	// The result will contain the user data
 	// var_dump($result);
