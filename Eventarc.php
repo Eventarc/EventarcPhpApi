@@ -32,10 +32,10 @@
  */
 class Eventarc
 {
-	const VERSION = 2.1;
+	const VERSION = 2.2;
 
 	protected $params = array();
-	private $server = 'https://api.eventarc.com/api/v2/';
+	public $server = 'https://api.eventarc.com/api/v2/';
 	protected $method;
 	public $response;
 	public $error;
@@ -70,31 +70,6 @@ class Eventarc
 			$this->u_name = $u_id;
 		}
 		$this->u_apikey = $u_apikey;
-	}
-
-	/**
-	 * Get a list of your eventarc groups.
-	 * Note that these are referred to and displayed as 'folders' in the
-	 * myeventarc interface. You know, those folder-y things on the left hand
-	 * side?
-	 * 
-	 * Groups are just a convenient way of grouping events.
-	 * 
-	 * @param int $u_id Your user id
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
-	 * @return array The result array
-	 */
-	public function group_list($u_id=FALSE)
-	{
-		if ( ! $u_id)
-		{
-			$u_id = $this->u_id;
-		}
-		return $this->call('eventarc.group.list', array(
-			'u_id' => $u_id
-			)
-		);
 	}
 
 	/**
@@ -133,6 +108,66 @@ class Eventarc
 	}
 
 	/**
+	 * Get a particular event  
+	 * 
+	 * @param int $e_id The id of the event to get
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventget.html
+	 * @return array The result array
+	 */
+	public function event_get($e_id)
+	{
+		return $this->call('eventarc.event.get', array(
+			'e_id' => $e_id
+			)
+		);
+	}
+
+	/**
+	 * Create the event that you have built. See docs for this one. 
+	 * 
+	 * @param mixed $params 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
+	 * @return array The result array
+	 */
+	public function event_create($params=FALSE)
+	{
+		return $this->call('eventarc.event.create', $params);
+	}
+
+	/**
+	 * Copies an events STUFF to a new event
+	 * 
+	 * @param int $e_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventcopy.html
+	 * @return array The result array
+	 */
+	public function event_copy($e_id)
+	{
+		return $this->call('eventarc.event.copy', array('e_id' => $e_id));
+	}
+
+	/**
+	 * Create a group and love it 
+	 * 
+	 * @param array $params This contains your group details
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgroupcreate.html
+	 * @return array The result array
+	 */
+	public function group_create(array $params)
+	{
+		// If g_parent is not set, set default to 0 (the first group)
+		if ( ! array_key_exists('g_parent', $params))
+		{
+			$params['g_parent'] = 0;
+		}	
+		return $this->call('eventarc.group.create', $params);
+	}
+
+	/**
 	 * Get a particular group  
 	 * 
 	 * @param int $g_id The id of the group to get
@@ -148,6 +183,31 @@ class Eventarc
 		);
 	}
 	
+	/**
+	 * Get a list of your eventarc groups.
+	 * Note that these are referred to and displayed as 'folders' in the
+	 * myeventarc interface. You know, those folder-y things on the left hand
+	 * side?
+	 * 
+	 * Groups are just a convenient way of grouping events.
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
+	 * @return array The result array
+	 */
+	public function group_list($u_id=FALSE)
+	{
+		if ( ! $u_id)
+		{
+			$u_id = $this->u_id;
+		}
+		return $this->call('eventarc.group.list', array(
+			'u_id' => $u_id
+			)
+		);
+	}
+
 	/**
 	 * Gets the details of an attendee  
 	 * 
@@ -182,25 +242,6 @@ class Eventarc
 	}
 
 	/**
-	 * Login to the api and get your apikey. With a bit of luck you should only
-	 * need to do this once to grab your apikey.
-	 * 
-	 * @param string $u_name 
-	 * @param string $u_password 
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarcuserlogin.html
-	 * @return array The result array
-	 */
-	public function user_login($u_name, $u_password)
-	{
-		return $this->call('eventarc.user.login', array(
-			'u_name' => $u_name,
-			'u_password' => $u_password
-			)
-		);
-	}
-
-	/**
 	 * Resend a attendees confirmatin email. If the attendee is not valid or
 	 * active then this will fail.
 	 * 
@@ -216,7 +257,6 @@ class Eventarc
 			)
 		);
 	}
-
 
 	/**
 	 * Get a list of attendees for a particular event 
@@ -235,21 +275,22 @@ class Eventarc
 	}
 
 	/**
-	 * Create a group and love it 
+	 * Login to the api and get your apikey. With a bit of luck you should only
+	 * need to do this once to grab your apikey.
 	 * 
-	 * @param array $params This contains your group details
+	 * @param string $u_name 
+	 * @param string $u_password 
 	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarcgroupcreate.html
+	 * @link http://api.eventarc.com/docs/eventarcuserlogin.html
 	 * @return array The result array
 	 */
-	public function group_create(array $params)
+	public function user_login($u_name, $u_password)
 	{
-		// If g_parent is not set, set default to 0 (the first group)
-		if ( ! array_key_exists('g_parent', $params))
-		{
-			$params['g_parent'] = 0;
-		}	
-		return $this->call('eventarc.group.create', $params);
+		return $this->call('eventarc.user.login', array(
+			'u_name' => $u_name,
+			'u_password' => $u_password
+			)
+		);
 	}
 
 	/**
@@ -271,6 +312,20 @@ class Eventarc
 			)
 		);
 	}
+
+	/**
+	 * NOTE: The following 'add_*' functions should only be used when creating 
+	 * an event. Check out the documentation for eventarc.event.create to see
+	 * how they work. They should return 'this' so they can be chained easily.
+	 *
+	 * add_event
+	 * add_address
+	 * add_widget
+	 * add_ticket
+	 * add_theme
+	 * add_ticket_limit
+	 * add_ticket_show_fees
+	 */
 
 	/**
 	 * Add event data  (see the docs for how to use this..)
@@ -328,7 +383,6 @@ class Eventarc
 		return $this;
 	}
 
-
 	/**
 	 * Add theme data  (see the docs for how to use this..)
 	 * 
@@ -341,33 +395,6 @@ class Eventarc
 	{
 		$this->format_params($theme_data);
 		return $this;
-	}
-
-
-	/**
-	 * Create the event that you have built. See docs for this one. 
-	 * 
-	 * @param mixed $params 
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarceventcreate.html
-	 * @return array The result array
-	 */
-	public function event_create($params=FALSE)
-	{
-		return $this->call('eventarc.event.create', $params);
-	}
-
-	/**
-	 * Copies an events STUFF to a new event
-	 * 
-	 * @param int $e_id 
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarceventcopy.html
-	 * @return array The result array
-	 */
-	public function event_copy($e_id)
-	{
-		return $this->call('eventarc.event.copy', array('e_id' => $e_id));
 	}
 
 	/**
@@ -397,7 +424,6 @@ class Eventarc
 		$this->format_params(array('to_showfees' => ($show_fees)?1:0));
 		return $this;
 	}
-
 
 	/**
 	 * Call a eventarc API method
@@ -560,7 +586,6 @@ class Eventarc
 			}
 		}
 	}
-
 
 	/**
 	 * Send the payload!  
