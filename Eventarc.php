@@ -32,7 +32,7 @@
  */
 class Eventarc
 {
-	const VERSION = 2.2;
+	const VERSION = 2.3;
 
 	protected $params = array();
 	public $server = 'https://api.eventarc.com/api/v2/';
