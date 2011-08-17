@@ -134,6 +134,20 @@ class Eventarc
 		$this->format_params(array('e_id' => $e_id));
 		return $this->call('eventarc.event.gettheme');
 	}
+	
+	/**
+	 * Get an events tickets pool
+	 * 
+	 * @param int $e_id The event whose tickets pool you want
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgetticketspool.html
+	 * @return array The result array
+	 */
+	public function event_get_tickets_pool($e_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		return $this->call('eventarc.event.getticketspool');
+	}
 
 	/**
 	 * Get a particular event  
