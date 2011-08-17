@@ -98,13 +98,27 @@ class Eventarc
 	 * 
 	 * @param int $e_id The event whose tickets you want
 	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarceventlist.html
+	 * @link http://api.eventarc.com/docs/eventarceventgettickets.html
 	 * @return array The result array
 	 */
 	public function event_get_tickets($e_id)
 	{
 		$this->format_params(array('e_id' => $e_id));
 		return $this->call('eventarc.event.gettickets');
+	}
+
+	/**
+	 * Get an events address
+	 * 
+	 * @param int $e_id The event whose address you want
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgetaddress.html
+	 * @return array The result array
+	 */
+	public function event_get_address($e_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		return $this->call('eventarc.event.getaddress');
 	}
 
 	/**
@@ -118,6 +132,22 @@ class Eventarc
 	public function event_get($e_id)
 	{
 		return $this->call('eventarc.event.get', array(
+			'e_id' => $e_id
+			)
+		);
+	}
+	
+	/**
+	 * Get an events full details (address data, ticket data etc.)
+	 * 
+	 * @param int $e_id The id of the event to get
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgetfull.html
+	 * @return array The result array
+	 */
+	public function event_get_full($e_id)
+	{
+		return $this->call('eventarc.event.getfull', array(
 			'e_id' => $e_id
 			)
 		);
