@@ -120,6 +120,20 @@ class Eventarc
 		$this->format_params(array('e_id' => $e_id));
 		return $this->call('eventarc.event.getaddress');
 	}
+	
+	/**
+	 * Get an events theme
+	 * 
+	 * @param int $e_id The event whose theme you want
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgettheme.html
+	 * @return array The result array
+	 */
+	public function event_get_theme($e_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		return $this->call('eventarc.event.gettheme');
+	}
 
 	/**
 	 * Get a particular event  
