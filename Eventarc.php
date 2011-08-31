@@ -32,7 +32,7 @@
  */
 class Eventarc
 {
-	const VERSION = 2.3;
+	const VERSION = 2.5;
 
 	protected $params = array();
 	public $server = 'https://api.eventarc.com/api/v2/';
@@ -165,6 +165,22 @@ class Eventarc
 		);
 	}
 	
+	/**
+	 * Delete an event  
+	 * 
+	 * @param int $e_id The id of the event to delete
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventdelete.html
+	 * @return array The result array
+	 */
+	public function event_get($e_id)
+	{
+		return $this->call('eventarc.event.delete', array(
+			'e_id' => $e_id
+			)
+		);
+	}
+
 	/**
 	 * Get an events full details (address data, ticket data etc.)
 	 * 
