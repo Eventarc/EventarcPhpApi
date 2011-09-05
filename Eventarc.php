@@ -188,7 +188,7 @@ class Eventarc
 	 * @link http://api.eventarc.com/docs/eventarceventdelete.html
 	 * @return array The result array
 	 */
-	public function event_get($e_id)
+	public function event_delete($e_id)
 	{
 		return $this->call('eventarc.event.delete', array(
 			'e_id' => $e_id
