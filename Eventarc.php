@@ -32,7 +32,7 @@
  */
 class Eventarc
 {
-	const VERSION = 2.5;
+	const VERSION = 2.6.0; // See http://semver.org/
 
 	protected $params = array();
 	public $server = 'https://api.eventarc.com/api/v2/';
@@ -134,7 +134,22 @@ class Eventarc
 		$this->format_params(array('e_id' => $e_id));
 		return $this->call('eventarc.event.gettheme');
 	}
-	
+
+	/**
+	 * Get an events edit url
+	 * 
+	 * @param int $e_id The event you would like to edit
+	 * @param string $e_returnurl The url you would like to return to after editing your event
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgettheme.html
+	 * @return array The result array
+	 */
+	public function event_get_edit_url($e_id, $e_returnurl)
+	{
+		$this->format_params(array('e_id' => $e_id, 'e_returnurl' => $e_returnurl));
+		return $this->call('eventarc.event.getediturl');
+	}
+
 	/**
 	 * Get an events tickets pool
 	 * 
