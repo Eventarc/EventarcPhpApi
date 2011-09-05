@@ -32,7 +32,7 @@
  */
 class Eventarc
 {
-	const VERSION = 2.6.0; // See http://semver.org/
+	const VERSION = '2.6.0'; // See http://semver.org/
 
 	protected $params = array();
 	public $server = 'https://api.eventarc.com/api/v2/';
