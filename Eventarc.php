@@ -73,24 +73,69 @@ class Eventarc
 	}
 
 	/**
-	 * Get your list of events.
-	 * This returns all of your events. If you want you can provide a status to
-	 * filter the events returned. Valid statuses are:
-	 * active, pending, draft
+	 * Check a attendee in  
 	 * 
-	 * @param string $e_status You can try active, pending, draft or leave it
-	 * out and get all of them.
+	 * @param string $et_rego The attendees registration code
 	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarceventlist.html
+	 * @link http://api.eventarc.com/docs/eventarcattendeecheckin.html
 	 * @return array The result array
 	 */
-	public function event_list($e_status=FALSE)
+	public function attendee_checkin($e_id, $et_rego)
 	{
-		if ($e_status)
-		{
-			$this->format_params(array('e_status' => $e_status));
-		}
-		return $this->call('eventarc.event.list');
+		return $this->call('eventarc.checkin.create', array(
+			'e_id' => $e_id,
+			'et_rego' => $et_rego
+			)
+		);
+	}
+
+	/**
+	 * Gets the details of an attendee  
+	 * 
+	 * @param int $at_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcattendeeget.html
+	 * @return array The result array
+	 */
+	public function attendee_get($at_id)
+	{
+		return $this->call('eventarc.attendee.get', array(
+			'at_id' => $at_id
+			)
+		);
+	}
+
+	/**
+	 * Get a list of attendees for a particular event 
+	 * 
+	 * @param int $e_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcattendeelist.html
+	 * @return array The result array
+	 */
+	public function attendee_list($e_id)
+	{
+		return $this->call('eventarc.attendee.list', array(
+			'e_id' => $e_id
+			)
+		);
+	}
+
+	/**
+	 * Resend a attendees confirmatin email. If the attendee is not valid or
+	 * active then this will fail.
+	 * 
+	 * @param int $at_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcattendeeresendemail.html
+	 * @return array The result array
+	 */
+	public function attendee_resendemail($at_id)
+	{
+		return $this->call('eventarc.attendee.resendemail', array(
+			'at_id' => $at_id
+			)
+		);
 	}
 
 	/**
@@ -226,7 +271,7 @@ class Eventarc
 	}
 
 	/**
-	 * Copies an events STUFF to a new event
+	 * Copies an events STUFF to a new event. BETA BETA
 	 * 
 	 * @param int $e_id 
 	 * @access public
@@ -236,6 +281,27 @@ class Eventarc
 	public function event_copy($e_id)
 	{
 		return $this->call('eventarc.event.copy', array('e_id' => $e_id));
+	}
+
+	/**
+	 * Get your list of events.
+	 * This returns all of your events. If you want you can provide a status to
+	 * filter the events returned. Valid statuses are:
+	 * active, pending, draft
+	 * 
+	 * @param string $e_status You can try active, pending, draft or leave it
+	 * out and get all of them.
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventlist.html
+	 * @return array The result array
+	 */
+	public function event_list($e_status=FALSE)
+	{
+		if ($e_status)
+		{
+			$this->format_params(array('e_status' => $e_status));
+		}
+		return $this->call('eventarc.event.list');
 	}
 
 	/**
@@ -297,71 +363,6 @@ class Eventarc
 		);
 	}
 
-	/**
-	 * Gets the details of an attendee  
-	 * 
-	 * @param int $at_id 
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarcattendeeget.html
-	 * @return array The result array
-	 */
-	public function attendee_get($at_id)
-	{
-		return $this->call('eventarc.attendee.get', array(
-			'at_id' => $at_id
-			)
-		);
-	}
-
-	/**
-	 * Check a attendee in  
-	 * 
-	 * @param string $et_rego The attendees registration code
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarcattendeecheckin.html
-	 * @return array The result array
-	 */
-	public function attendee_checkin($e_id, $et_rego)
-	{
-		return $this->call('eventarc.checkin.create', array(
-			'e_id' => $e_id,
-			'et_rego' => $et_rego
-			)
-		);
-	}
-
-	/**
-	 * Resend a attendees confirmatin email. If the attendee is not valid or
-	 * active then this will fail.
-	 * 
-	 * @param int $at_id 
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarcattendeeresendemail.html
-	 * @return array The result array
-	 */
-	public function attendee_resendemail($at_id)
-	{
-		return $this->call('eventarc.attendee.resendemail', array(
-			'at_id' => $at_id
-			)
-		);
-	}
-
-	/**
-	 * Get a list of attendees for a particular event 
-	 * 
-	 * @param int $e_id 
-	 * @access public
-	 * @link http://api.eventarc.com/docs/eventarcattendeelist.html
-	 * @return array The result array
-	 */
-	public function attendee_list($e_id)
-	{
-		return $this->call('eventarc.attendee.list', array(
-			'e_id' => $e_id
-			)
-		);
-	}
 
 	/**
 	 * Login to the api and get your apikey. With a bit of luck you should only
@@ -400,6 +401,106 @@ class Eventarc
 			'u_id' => $u_id
 			)
 		);
+	}
+
+	/**
+	 * Get a list of your images. 
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcimagelist.html
+	 * @return array The result array
+	 */
+	public function image_list($u_id=FALSE)
+	{
+		if ( ! $u_id)
+		{
+			$u_id = $this->u_id;
+		}
+		return $this->call('eventarc.image.list', array(
+			'u_id' => $u_id
+			)
+		);
+	}
+
+	/**
+	 * Upload an image to Eventarc. You can then use these images in various
+	 * spots. This is still BETA functionality. It may change.
+	 *
+	 * TODO Wrap this up into 'send_payload'
+	 * 
+	 * @param mixed $image The image (path) to upload
+	 * @param string $i_name The name of the image (for your benefit)
+	 * @access public
+	 * @return array The result array
+	 */
+	public function image_upload($image, $i_name='')
+	{
+		// Make sure the image is valid
+		if ( ! is_readable($image))
+		{
+			// Thats not a file
+			throw new Eventarcapi_Exception(
+				'Invalid input. The image path supplied is not valid.', 126);
+		}
+
+		// Create the payload
+		$this->setup_u_data();
+		$this->method = 'eventarc.image.upload';
+		$this->params['i_data'] = array();
+		$this->params['i_data']['i_name'] = $i_name;
+		$image = '@'.$image;
+
+		// Prepare the payload
+		$payload = array(
+			'jsonrpc' => '2.0',
+			'method' => $this->method,
+			'id' => time(),
+			'params' => $this->params
+		);
+
+		// Convert payload to JSON
+		if (($json_payload = json_encode($payload)) === NULL)
+		{
+			// JSON encode failed
+			throw new Eventarcapi_Exception(
+				'We were unable to encode the data into JSON', 123);
+		}
+
+		// NOW place the payload in a POST var
+		$upload_payload = array(
+			'image' => $image,
+			'request' => $json_payload);
+
+		// Send the payload and wait for a response
+		$ch = curl_init();
+
+		// Set URL and other appropriate options
+		// NOTE: this is using different curl options then send_payload
+		curl_setopt($ch, CURLOPT_URL, $this->server);
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $upload_payload);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+	
+		// Grab URL, and print
+		$response = curl_exec($ch);
+	
+		if (curl_errno($ch) > 0)
+		{
+			// Error
+			throw new Eventarcapi_Exception(
+				'Failed to contact server: '.print_r(curl_error($ch), TRUE),
+				123);
+		}
+
+		curl_close($ch);
+
+		// Process the response
+		return $this->process_response($response);
 	}
 
 	/**
@@ -649,6 +750,12 @@ class Eventarc
 			}
 		}
 
+		// Setup the u_data business (apikey etc.)
+		$this->setup_u_data();
+	}
+
+	private function setup_u_data()
+	{
 		// If they have set the api key and u_id (in the constructor or
 		//  directly) then add these to the params too
 		if ($this->u_id OR $this->u_name OR $this->u_apikey)
