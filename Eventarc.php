@@ -304,6 +304,13 @@ class Eventarc
 		return $this->call('eventarc.event.list');
 	}
 
+	public function event_whitelabel($e_id, array $pe_data)
+	{
+		$this->format_params(array('e_id' => $e_id) + $pe_data);
+		
+		return $this->call('eventarc.event.whitelabel');
+	}
+
 	/**
 	 * Create a group and love it 
 	 * 
@@ -432,6 +439,7 @@ class Eventarc
 	 * @param mixed $image The image (path) to upload
 	 * @param string $i_name The name of the image (for your benefit)
 	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcimageupload.html
 	 * @return array The result array
 	 */
 	public function image_upload($image, $i_name='')
@@ -488,7 +496,7 @@ class Eventarc
 	
 		// Grab URL, and print
 		$response = curl_exec($ch);
-	
+
 		if (curl_errno($ch) > 0)
 		{
 			// Error
