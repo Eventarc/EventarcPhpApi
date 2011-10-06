@@ -73,6 +73,32 @@ class Eventarc
 	}
 
 	/**
+	 * Create an address. You can assign it to a event later. 
+	 * 
+	 * @param array $params 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcaddresscreate.html
+	 * @return array The result array
+	 */
+	public function address_create(array $params)
+	{
+		return $this->call('eventarc.address.create', $params);
+	}
+
+	/**
+	 * Update an address.
+	 * 
+	 * @param array $params 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcaddresscreate.html
+	 * @return array The result array
+	 */
+	public function address_update(array $params)
+	{
+		return $this->call('eventarc.address.update', $params);
+	}
+
+	/**
 	 * Check a attendee in  
 	 * 
 	 * @param string $et_rego The attendees registration code
@@ -166,6 +192,19 @@ class Eventarc
 		return $this->call('eventarc.event.getaddress');
 	}
 	
+	/**
+	 * Set an events address
+	 * 
+	 * @param array $params 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventsetaddress.html
+	 * @return array The result array
+	 */
+	public function event_set_address(array $params)
+	{
+		return $this->call('eventarc.event.setaddress', $params);
+	}
+
 	/**
 	 * Get an events theme
 	 * 
@@ -281,6 +320,19 @@ class Eventarc
 	public function event_copy($e_id)
 	{
 		return $this->call('eventarc.event.copy', array('e_id' => $e_id));
+	}
+	
+	/**
+	 * Update an event
+	 * 
+	 * @param int $e_id 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventedit.html
+	 * @return array The result array
+	 */
+	public function event_update(array $params)
+	{
+		return $this->call('eventarc.event.update', $params);
 	}
 
 	/**
