@@ -206,6 +206,44 @@ class Eventarc
 	}
 
 	/**
+	 * Get an events show fees status
+	 * 
+	 * @param int $e_id The event whose address you want
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgetshowfees.html
+	 * @return array The result array
+	 */
+	public function event_get_showfees($e_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		return $this->call('eventarc.event.getshowfees');
+	}
+
+	/**
+	 * Set an events show fees status
+	 * 
+	 * @param int $e_id The event whose address you want
+	 * @param boolean $to_showfees The status you want to set show fees to
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventsetshowfees.html
+	 * @return array The result array
+	 */
+	public function event_set_showfees($e_id, $to_showfees)
+	{
+		$this->format_params(array('e_id' => $e_id));
+
+		// We need to set to_showfees as '1' or '0'
+		if ($to_showfees !== '0' AND $to_showfees !== '1')
+		{
+			$to_showfees = ($to_showfees) ? '1' : '0';
+		}
+
+		$this->format_params(array('to_showfees' => $to_showfees));
+
+		return $this->call('eventarc.event.setshowfees');
+	}
+
+	/**
 	 * Get an events theme
 	 * 
 	 * @param int $e_id The event whose theme you want
