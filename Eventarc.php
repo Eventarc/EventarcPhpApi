@@ -208,7 +208,7 @@ class Eventarc
 	/**
 	 * Get an events show fees status
 	 * 
-	 * @param int $e_id The event whose address you want
+	 * @param int $e_id The event 
 	 * @access public
 	 * @link http://api.eventarc.com/docs/eventarceventgetshowfees.html
 	 * @return array The result array
@@ -222,7 +222,7 @@ class Eventarc
 	/**
 	 * Set an events show fees status
 	 * 
-	 * @param int $e_id The event whose address you want
+	 * @param int $e_id The event
 	 * @param boolean $to_showfees The status you want to set show fees to
 	 * @access public
 	 * @link http://api.eventarc.com/docs/eventarceventsetshowfees.html
@@ -241,6 +241,44 @@ class Eventarc
 		$this->format_params(array('to_showfees' => $to_showfees));
 
 		return $this->call('eventarc.event.setshowfees');
+	}
+	
+	/**
+	 * Get an events tracking status
+	 * 
+	 * @param int $e_id The event
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgettracking.html
+	 * @return array The result array
+	 */
+	public function event_get_tracking($e_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		return $this->call('eventarc.event.gettracking');
+	}
+
+	/**
+	 * Set an events show fees status
+	 * 
+	 * @param int $e_id The event
+	 * @param boolean $ta_status The status you want to set tracking to
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventsettracking.html
+	 * @return array The result array
+	 */
+	public function event_set_tracking($e_id, $ta_status)
+	{
+		$this->format_params(array('e_id' => $e_id));
+
+		// We need to set to_ta_status as '1' or '0'
+		if ($ta_status !== '0' AND $ta_status !== '1')
+		{
+			$ta_status = ($ta_status) ? '1' : '0';
+		}
+
+		$this->format_params(array('ta_status' => $ta_status));
+
+		return $this->call('eventarc.event.settracking');
 	}
 
 	/**
@@ -496,6 +534,23 @@ class Eventarc
 		}
 		return $this->call('eventarc.user.get', array(
 			'u_id' => $u_id
+			)
+		);
+	}
+	
+	/**
+	 * Create and add a widget to a event. 
+	 * 
+	 * @param array $params 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcwidgetcreate.html
+	 * @return array The result array
+	 */
+	public function widget_create($e_id, array $widget_data)
+	{
+		$this->add_array_item('wd_data', $widget_data);
+		return $this->call('eventarc.widget.create', array(
+			'e_id' => $e_id
 			)
 		);
 	}
