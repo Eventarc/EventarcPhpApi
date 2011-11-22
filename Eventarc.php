@@ -440,6 +440,23 @@ class Eventarc
 	}
 
 	/**
+	 * Create a discount code 
+	 * 
+	 * @param int $e_id The event
+	 * @param array $dc_data The data for the discount code (see docs)
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcdiscountcodecreate.html
+	 * @return array The result array
+	 */
+	public function discountcode_create($e_id, $dc_data)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		$this->format_params($dc_data);
+
+		return $this->call('eventarc.discountcode.create');
+	}
+
+	/**
 	 * Create a group and love it 
 	 * 
 	 * @param array $params This contains your group details
