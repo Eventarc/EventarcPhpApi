@@ -99,8 +99,21 @@ class Eventarc
 	}
 
 	/**
-	 * Check a attendee in
-	 *
+	 * Get an address.
+	 * 
+	 * @param array $params 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcaddressget.html
+	 * @return array The result array
+	 */
+	public function address_get($a_id)
+	{
+		return $this->call('eventarc.address.get', array('a_id' => $a_id));
+	}
+
+	/**
+	 * Check a attendee in  
+	 * 
 	 * @param string $et_rego The attendees registration code
 	 * @access public
 	 * @link http://api.eventarc.com/docs/eventarcattendeecheckin.html
