@@ -32,10 +32,10 @@
  */
 class Eventarc
 {
-	const VERSION = '2.6.0'; // See http://semver.org/
+	const VERSION = '3.0.0'; // See http://semver.org/
 
 	protected $params = array();
-	public $server = 'https://api.eventarc.com/api/v2/';
+	public $server = 'https://api.eventarc.com/api/v3/';
 	protected $method;
 	public $response;
 	public $error;
@@ -256,6 +256,37 @@ class Eventarc
 		return $this->call('eventarc.event.setshowfees');
 	}
 	
+	/**
+	 * Get an events payment config status
+	 * 
+	 * @param int $e_id The event 
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventgetshowfees.html
+	 * @return array The result array
+	 */
+	public function event_get_paymentconfig($e_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		return $this->call('eventarc.event.getpaymentconfig');
+	}
+
+	/**
+	 * Set an events show fees status
+	 * 
+	 * @param int $e_id The event
+	 * @param boolean $to_showfees The status you want to set show fees to
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarceventsetshowfees.html
+	 * @return array The result array
+	 */
+	public function event_set_paymentconfig($e_id, $pa_id)
+	{
+		$this->format_params(array('e_id' => $e_id));
+		$this->format_params(array('pa_id' => $pa_id));
+
+		return $this->call('eventarc.event.setpaymentconfig');
+	}
+
 	/**
 	 * Get an events tracking status
 	 * 
@@ -524,6 +555,163 @@ class Eventarc
 		}
 		return $this->call('eventarc.group.list', array(
 			'u_id' => $u_id
+			)
+		);
+	}
+
+
+	/**
+	 * Create a free payment driver (for free events)
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @return array The result array
+	 */
+	public function payment_createfreedriver($set_as_default=FALSE)
+	{
+		$this->format_params(array('pd_default' => ($set_as_default)? 1 : 0));
+		return $this->call('eventarc.payment.createfreedriver');
+	}
+
+	/**
+	 * Create a hosted payment driver
+	 * 
+	 * @access public
+	 * @return array The result array
+	 */
+	public function payment_createhostdriver($set_as_default=FALSE)
+	{
+		$this->format_params(array('pd_default' => ($set_as_default)? 1 : 0));
+		return $this->call('eventarc.payment.createfreedriver');
+	}
+
+	/**
+	 * Create a securepay payment driver
+	 * 
+	 * @access public
+	 * @return array The result array
+	 */
+	public function payment_createsecurepaydriver($pd_username, $pd_password, $set_as_default=FALSE)
+	{
+		return $this->call('eventarc.payment.createsecurepaydriver', array(
+			'pd_username' => $pd_username,
+			'pd_password' => $pd_password,
+			'pd_default' => ($set_as_default)? 1 : 0
+			)
+		);
+	}
+
+	/**
+	 * Create a paypal payment driver
+	 * 
+	 * @access public
+	 * @return array The result array
+	 */
+	public function payment_createpaypaldriver($pd_paypalemail, $set_as_default=FALSE)
+	{
+		return $this->call('eventarc.payment.createpaypaldriver', array(
+			'pd_paypalemail' => $pd_paypalemail,
+			'pd_default' => ($set_as_default)? 1 : 0
+			)
+		);
+	}
+
+	/**
+	 * Create a eWay payment driver
+	 * 
+	 * @access public
+	 * @return array The result array
+	 */
+	public function payment_createewaydriver($pd_username, $set_as_default=FALSE)
+	{
+		return $this->call('eventarc.payment.createewaydriver', array(
+			'pd_username' => $pd_username,
+			'pd_default' => ($set_as_default)? 1 : 0
+			)
+		);
+	}
+
+	/**
+	 * Get the default payment driver
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
+	 * @return array The result array
+	 */
+	public function payment_getdefaultdriver($u_id=FALSE)
+	{
+		if ( ! $u_id)
+		{
+			$u_id = $this->u_id;
+		}
+		return $this->call('eventarc.payment.getdefaultdriver', array(
+			'u_id' => $u_id
+			)
+		);
+	}
+
+	/**
+	 * Set the default payment driver
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
+	 * @return array The result array
+	 */
+	public function payment_setdefaultdriver($pd_id=FALSE)
+	{
+		return $this->call('eventarc.payment.setdefaultdriver', array(
+			'pd_id' => $pd_id
+			)
+		);
+	}
+
+	/**
+	 * Get the default payment driver
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
+	 * @return array The result array
+	 */
+	public function payment_createconfig(array $pa_data)
+	{
+		return $this->call('eventarc.payment.createconfig', $pa_data);
+	}
+
+	/**
+	 * Get the default payment config
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
+	 * @return array The result array
+	 */
+	public function payment_getdefaultconfig($u_id=FALSE)
+	{
+		if ( ! $u_id)
+		{
+			$u_id = $this->u_id;
+		}
+		return $this->call('eventarc.payment.getdefaultconfig', array(
+			'u_id' => $u_id
+			)
+		);
+	}
+
+	/**
+	 * Set the default payment config
+	 * 
+	 * @param int $u_id Your user id
+	 * @access public
+	 * @link http://api.eventarc.com/docs/eventarcgrouplist.html
+	 * @return array The result array
+	 */
+	public function payment_setdefaultconfig($pa_id=FALSE)
+	{
+		return $this->call('eventarc.payment.setdefaultconfig', array(
+			'pa_id' => $pa_id
 			)
 		);
 	}
@@ -1004,6 +1192,20 @@ class Eventarc
 		// Save the payload(s)
 		$this->last_payload = $payload;
 		$this->last_json_payload = $json_payload;
+
+
+		if (TRUE)
+		{
+			list($e,$c,$m) = explode('.', $this->method);
+			$class = 'Api_V3_'.$c;
+			$x = new $class(array('params' => $this->params));
+			$response = $x->call_api_method($m);
+			//$api_event = new Api_Event(array('params'=>$data));
+			//$result = $api_event->call_api_method('create');
+
+			// Process the response
+			return $response['result'];
+		}
 
 		// Wipe the params
 		$this->params = array();
