@@ -1194,7 +1194,7 @@ class Eventarc
 		$this->last_json_payload = $json_payload;
 
 
-		if (TRUE)
+		if (FALSE)
 		{
 			list($e,$c,$m) = explode('.', $this->method);
 			$class = 'Api_V3_'.$c;
