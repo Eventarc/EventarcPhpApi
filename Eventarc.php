@@ -574,7 +574,7 @@ class Eventarc
 	}
 
 	/**
-	 * Create a hosted payment driver
+	 * Create a hosted payment driver (ie. Eventarc payment driver)
 	 * 
 	 * @access public
 	 * @return array The result array
@@ -582,7 +582,7 @@ class Eventarc
 	public function payment_createhostdriver($set_as_default=FALSE)
 	{
 		$this->format_params(array('pd_default' => ($set_as_default)? 1 : 0));
-		return $this->call('eventarc.payment.createfreedriver');
+		return $this->call('eventarc.payment.createhostdriver');
 	}
 
 	/**
