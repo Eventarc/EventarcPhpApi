@@ -632,6 +632,24 @@ class Eventarc
 	}
 
 	/**
+	 * Create a Braintree payment driver
+	 * 
+	 * @access public
+	 * @return array The result array
+	 */
+	public function payment_createbraintreedriver($pd_username, $pd_publickey,
+		$pd_privatekey, $set_as_default=FALSE)
+	{
+		return $this->call('eventarc.payment.createbraintreedriver', array(
+			'pd_username' => $pd_username,
+			'pd_publickey' => $pd_publickey,
+			'pd_privatekey' => $pd_privatekey,
+			'pd_default' => ($set_as_default)? 1 : 0
+			)
+		);
+	}
+
+	/**
 	 * Get the default payment driver
 	 * 
 	 * @param int $u_id Your user id
